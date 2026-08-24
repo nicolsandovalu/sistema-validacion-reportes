@@ -145,6 +145,7 @@
                 <thead>
                     <tr>
                         <th>Consultante</th>
+                        <th>Horas</th>  <!-- Nueva columna -->
                         <th>Estado</th>
                         <th>Motivo del Sistema</th>
                     </tr>
@@ -153,6 +154,7 @@
                     {% for registro in registros %}
                     <tr>
                         <td style="font-weight: 500;">{{ registro.nombre }}</td>
+                        <td>{{ registro.horas }}</td>  <!-- Nuevo dato -->
                         <td>{{ registro.estado }}</td>
                         <td style="color: #4b5563;">{{ registro.motivo }}</td>
                     </tr>

@@ -18,6 +18,7 @@ def resumen(request):
 
         nuevo_registro = {
             "nombre": nombre,
+            "horas": horas,  
             "estado": estado,
             "motivo": motivo
         }

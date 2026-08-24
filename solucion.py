@@ -39,6 +39,7 @@ if __name__ == "__main__":
     
     registro = {
         "nombre": nombre,
+        "horas": horas,  # <-- ¡Agregamos esta línea!
         "estado": estado,
         "motivo": motivo
     }
