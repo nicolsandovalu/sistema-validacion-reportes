@@ -1,5 +1,15 @@
+# Entorno virtual
+venv/
+env/
+
+# Claves y secretos
 .env
-__pycache__/
-*/__pycache__/
+
+# Archivos de la base de datos y registros temporales
 db.sqlite3
 datos.json
+
+# Caché de Python
+__pycache__/
+*/__pycache__/
+*.pyc
