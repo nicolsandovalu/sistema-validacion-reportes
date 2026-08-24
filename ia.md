@@ -1,11 +1,14 @@
 # Uso de IA en el Proyecto (Evaluación ES1)
 
-1. **Herramienta usada y propósito:**
+**1. **Herramienta usada y propósito:**
    Utilicé Gemini (Google) como asistente de programación para estructurar el proyecto cumpliendo estrictamente con la rúbrica de la ES1. La consulté para redactar el apartado de negocio, diseñar la regla lógica de 4 resultados y resolver errores de configuración en Django.
 
-2. **Consulta concreta y respuesta:**
-   Le pregunté: "Al ejecutar runserver me sale el error ModuleNotFoundError: No module named 'miproyecto'. ¿Qué significa?".
-   La IA me respondió que el error ocurría porque mi carpeta interna de configuración se llamaba `proyecto` en lugar de `miproyecto`, y que Django seguía buscando el nombre antiguo en el archivo `settings.py`.
+**2. Qué se consultó a la herramienta de IA:**
+- Consulté cómo solucionar el error `ModuleNotFoundError: No module named 'core'` que bloqueaba la consola al intentar ejecutar `python manage.py startapp core`.
+- Consulté el motivo del error `ModuleNotFoundError: No module named 'miproyecto'` que apareció al intentar levantar el servidor con `runserver`.
+- Pedí sugerencias para estructurar el formulario HTML interactivo y simular la validación con un diccionario en lugar de quemar un solo token en el código.
 
-3. **Corrección realizada por mí:**
-   La IA me sugirió cambiar las rutas en `settings.py`, pero la solución que yo apliqué fue entender que las variables `ROOT_URLCONF` y `WSGI_APPLICATION` deben coincidir exactamente con el nombre de la carpeta que contiene el archivo `urls.py`. Hice el cambio manualmente en el código a `'proyecto.urls'` y guardé el archivo, lo que permitió que el servidor levantara sin problemas.
+**3. Qué corregí a partir de las respuestas:**
+- **Corrección de carga de App:** Comprendí que el error de 'core' se daba por el orden de ejecución de Django. Fui a `settings.py`, borré temporalmente `'core'` de `INSTALLED_APPS`, ejecuté el comando `startapp` con éxito y luego volví a registrar la aplicación.
+- **Corrección de rutas de configuración:** Para el error de `runserver`, identifiqué que mi carpeta interna se llamaba `proyecto` pero Django buscaba `miproyecto`. Modifiqué manualmente las variables `ROOT_URLCONF = 'proyecto.urls'` y `WSGI_APPLICATION = 'proyecto.wsgi.application'` en el archivo `settings.py` para sincronizar los nombres, logrando que el servidor levantara.
+- **Corrección de Lógica:** Reemplacé la validación estática en `solucion.py` por un diccionario (`TOKENS_AUTORIZADOS`), actualizando los condicionales `if/elif` para validar el token contra esta nueva estructura.
