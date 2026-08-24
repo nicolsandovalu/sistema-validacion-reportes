@@ -1,5 +1,6 @@
 
 Problema: Actualmente, la recepción y validación de los reportes mensuales de carga académica de los profesores se revisa de forma manual. Esto retrasa la gestión, cuesta horas de trabajo administrativo y pone en riesgo la confidencialidad al enviar resultados por correo uno a uno. 
+
 Solución: Un programa que evalúa automáticamente la solicitud de un profesor mediante un token y sus horas. El sistema decide si aprueba o rechaza el acceso al reporte, guarda el registro en un archivo JSON y muestra un resumen web de los intentos de acceso.  
 
 Alcance:
