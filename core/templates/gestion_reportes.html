@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reportes | ETL</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-hover: #7c3aed;
+            --bg-body: #f3f4f6;
+            --bg-surface: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--bg-surface);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.375rem;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-inactive {
+            background-color: #f9fafb;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-public {
+            background-color: #374151;
+            color: white;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--primary);
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            align-items: end;
+        }
+
+        .filter-form input,
+        .filter-form select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .alert-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Badges y Colores Dinámicos */
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge-ok {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        .badge-bad {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .text-success {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .text-danger {
+            color: #dc2626;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 style="font-size: 1.25rem; margin: 0;">Panel ETL Automatizado</h1>
+        <div class="nav-links">
+            <a href="{% url 'gestion_tokens' %}" class="btn btn-inactive">Módulo 1: Alta de Accesos</a>
+            <a href="{% url 'gestion_reportes' %}" class="btn btn-active">Módulo 2: Carga de Reportes</a>
+            <a href="{% url 'consulta' %}" class="btn btn-public">Vista Pública Docente</a>
+        </div>
+    </header>
+
+    <main>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <section class="card">
+            <h2 style="margin-top: 0;">2. Vincular Reportes (Power BI / Excel)</h2>
+            <form method="POST" enctype="multipart/form-data"
+                style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                {% csrf_token %}
+                <input type="file" name="archivo_csv" required accept=".csv"
+                    style="border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px;">
+                <button type="submit" class="btn btn-active">Procesar ETL y Vincular</button>
+            </form>
+        </section>
+
+        <section style="margin-bottom: 1rem;">
+            <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Dashboard: Historial Consolidado</h2>
+            <form class="filter-form" method="GET">
+                <input type="text" name="profesor" placeholder="Buscar Profesor..." value="{{ profesor_filtro }}">
+                <input type="text" name="programa" placeholder="Buscar Programa..." value="{{ programa_filtro }}">
+                <select id="estado" name="estado">
+                    <option value="">Todos los Estados</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Deprecado">Deprecado</option>
+                </select>
+                <button type="submit" class="btn btn-inactive">Filtrar</button>
+                <a href="{% url 'gestion_reportes' %}" class="btn btn-inactive"
+                    style="background: transparent;">Limpiar</a>
+            </form>
+        </section>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Profesor</th>
+                        <th>Programa</th>
+                        <th>Estado</th>
+                        <th>Resp.</th>
+                        <th>Ventas</th>
+                        <th>ISN/NPS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rep in reportes %}
+                    <tr>
+                        <td style="color: var(--text-muted);">{{ rep.fecha|date:"d/m/Y H:i" }}</td>
+                        <td style="font-weight: bold;">{{ rep.profesor.nombre }}</td>
+                        <td>{{ rep.programa }}</td>
+                        <td><span
+                                class="badge {% if 'activo' in rep.estado|lower %}badge-ok{% else %}badge-bad{% endif %}">{{rep.estado}}</span>
+                        </td>
+                        <td>{{ rep.cantidad_respuestas }}</td>
+                        <td>${{ rep.ventas_totales }}</td>
+                        <td>{{ rep.isn }} / {{ rep.nps }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">No hay
+                            reportes vinculados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const estadoActual = "{{ estado_filtro }}";
+            if (estadoActual) document.getElementById('estado').value = estadoActual;
+        });
+    </script>
+</body>
+
+</html>

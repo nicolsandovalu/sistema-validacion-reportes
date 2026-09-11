@@ -7,9 +7,10 @@ env/
 
 # Archivos de la base de datos y registros temporales
 db.sqlite3
-datos.json
 
 # Caché de Python
 __pycache__/
 */__pycache__/
 *.pyc
+*.py[cod]
+*$py.class
