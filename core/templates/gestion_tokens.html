@@ -132,6 +132,12 @@
             <a href="{% url 'gestion_tokens' %}" class="btn btn-active">Módulo 1: Alta de Accesos</a>
             <a href="{% url 'gestion_reportes' %}" class="btn btn-inactive">Módulo 2: Carga de Reportes</a>
             <a href="{% url 'consulta' %}" class="btn btn-public">Vista Pública Docente</a>
+
+            <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn" style="background-color: #dc2626; color: white;">Cerrar
+                    Sesión</button>
+            </form>
         </div>
     </header>
 
@@ -145,7 +151,8 @@
         <section class="card">
             <h2 style="margin-top: 0;">1. Generar Nuevos Tokens</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Suba un CSV con las columnas exactas
-                <strong>Profesor</strong> y <strong>Correo</strong>.</p>
+                <strong>Profesor</strong> y <strong>Correo</strong>.
+            </p>
             <form method="POST" enctype="multipart/form-data"
                 style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
                 {% csrf_token %}

@@ -35,9 +35,6 @@ class Registro(models.Model):
     eliminado = models.BooleanField(default=False)
     fecha_eliminacion = models.DateTimeField(null=True, blank=True)
 
-    class Meta:
-        ordering = ["-fecha"]
-
     def soft_delete(self):
         self.eliminado = True
         self.fecha_eliminacion = timezone.now()

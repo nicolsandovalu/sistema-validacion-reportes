@@ -24,9 +24,10 @@ class ProfesorAdmin(admin.ModelAdmin):
 
 @admin.register(Registro)
 class RegistroAdmin(admin.ModelAdmin):
-    list_display = ("get_profesor_nombre", "programa", "estado", "pago_profesores", "resultado", "fecha")
-    list_filter = ("estado", "programa", "eliminado")
-    search_fields = ("profesor__nombre",)
+    list_display = ('profesor', 'programa', 'estado', 'fecha', 'eliminado')
+    list_filter = ('estado', 'eliminado', 'programa')
+    search_fields = ('profesor__nombre', 'programa')
+    readonly_fields = ('fecha_eliminacion',)
     
     # Muestra el nombre del profesor en la tabla de reportes
     def get_profesor_nombre(self, obj):

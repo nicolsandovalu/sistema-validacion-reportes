@@ -1,9 +1,10 @@
 import csv
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
 from .models import Profesor, Registro
 from .decorators import requiere_rol
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 @requiere_rol("admin", "normal")
 def gestion_tokens(request):
@@ -76,20 +77,30 @@ def gestion_reportes(request):
             if not profesor:
                 errores.append(nombre_reporte)
                 continue
-                
-            cantidad = int(fila.get('Cantidad de Respuestas', 0))
             
+            # --- ALERTA GRAVE CORREGIDA: Bloque try/except ---
+            # Si el CSV trae letras donde van números, atrapamos el error para que el servidor no colapse.
+            try:
+                cantidad = int(fila.get('Cantidad de Respuestas', 0) or 0)
+                pago = int(fila.get('Pago Profesores', 0) or 0)
+                ventas = int(fila.get('Ventas Totales', 0) or 0)
+                isn_val = int(fila.get('ISN', 0) or 0)
+                nps_val = int(fila.get('NPS', 0) or 0)
+            except ValueError:
+                messages.error(request, "Error de formato: Se detectaron caracteres inválidos en las columnas numéricas del archivo.")
+                return redirect('gestion_reportes')
+                
             Registro.objects.create(
                 profesor=profesor,
                 programa=fila.get('Programa', '').strip(),
                 cantidad=cantidad,
                 estado=fila.get('Estado', '').strip(),
-                pago_profesores=int(fila.get('Pago Profesores', 0)),
-                ventas_totales=int(fila.get('Ventas Totales', 0)),
+                pago_profesores=pago,
+                ventas_totales=ventas,
                 cantidad_respuestas=cantidad,
-                isn=int(fila.get('ISN', 0)),
-                nps=int(fila.get('NPS', 0)),
-                resultado="" # Lo dejamos vacío para no romper la base de datos
+                isn=isn_val,
+                nps=nps_val,
+                resultado="" 
             )
             creados += 1
             
@@ -137,3 +148,49 @@ def consulta_profesor(request):
             error = "Credenciales incorrectas. Verifique que su nombre esté escrito exactamente igual al registro."
             
     return render(request, "consulta_profesor.html", {"profesor": profesor, "reportes": reportes, "error": error})
+
+
+# --- NUEVAS VISTAS PARA CUMPLIR LA RÚBRICA 2.1.3 (OPERACIONES CRUD) ---
+
+@requiere_rol("admin")
+def eliminar_reporte(request, pk):
+    # Operación DELETE: Utiliza soft_delete en lugar de destruir el dato real
+    registro = get_object_or_404(Registro, pk=pk, eliminado=False)
+    if request.method == "POST":
+        registro.soft_delete()
+        messages.success(request, "Registro eliminado del sistema (borrado lógico aplicado).")
+        return redirect('gestion_reportes')
+    return render(request, "confirmar.html", {"registro": registro})
+
+@requiere_rol("admin")
+def editar_reporte(request, pk):
+    # Operación UPDATE: Permite editar un registro existente
+    registro = get_object_or_404(Registro, pk=pk, eliminado=False)
+    if request.method == "POST":
+        try:
+            registro.cantidad = int(request.POST.get("cantidad", registro.cantidad))
+            registro.estado = request.POST.get("estado", registro.estado).strip()
+            registro.save()
+            messages.success(request, "Registro actualizado correctamente.")
+            return redirect('gestion_reportes')
+        except ValueError:
+            messages.error(request, "Error: La cantidad ingresada debe ser un número válido.")
+    return render(request, "editar.html", {"registro": registro})
+
+
+def vista_login(request):
+    if request.method == "POST":
+        user = authenticate(
+            request,
+            username=request.POST.get("username", "").strip(),
+            password=request.POST.get("password", "")
+        )
+        if user:
+            auth_login(request, user)
+            return redirect("gestion_reportes") # Redirige directo a tu dashboard
+        messages.error(request, "Usuario o contraseña incorrectos.")
+    return render(request, "login.html")
+
+def vista_logout(request):
+    auth_logout(request)
+    return redirect("login")

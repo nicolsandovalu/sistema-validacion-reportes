@@ -176,6 +176,12 @@
             <a href="{% url 'gestion_tokens' %}" class="btn btn-inactive">Módulo 1: Alta de Accesos</a>
             <a href="{% url 'gestion_reportes' %}" class="btn btn-active">Módulo 2: Carga de Reportes</a>
             <a href="{% url 'consulta' %}" class="btn btn-public">Vista Pública Docente</a>
+
+            <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn" style="background-color: #dc2626; color: white;">Cerrar
+                    Sesión</button>
+            </form>
         </div>
     </header>
 

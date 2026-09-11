@@ -1,8 +1,8 @@
 # Uso de Inteligencia Artificial Ev.2
 
 1. **Herramienta utilizada:** Gemini.
-2. **Consulta textual:** "Genera la estructura de base de datos para mi modelo de profesores en models.py con borrado lógico, e implementa el decorador para restringir el acceso a la subida de archivos CSV por roles."
-3. **Corrección aplicada:** La IA inicialmente sugirió guardar las credenciales en un modelo propio y usar `EMAIL_BACKEND` que generaba conflictos con `MAILERS`. Corregí la implementación para usar exclusivamente el sistema de autenticación nativo de Django y modifiqué el diccionario de configuración en `settings.py` para imprimir los correos en consola sin romper el servidor.
+2. **Consulta textual:** "Cómo implementar un sistema de roles en Django para tres tipos de usuarios sin usar un campo personalizado en el modelo, y cómo aplicarlo a las vistas."
+3. **Corrección aplicada:** "La IA sugirió inicialmente crear un modelo de usuario personalizado (Custom User Model), pero lo corregí y adapté para usar el sistema nativo de Group de Django, ya que cumple con los requerimientos de la rúbrica (admin, normal, viewer) sin sobre-complejizar la base de datos. También verifiqué que la validación ocurra a nivel de backend mediante un decorador, descartando la sugerencia de la IA de ocultar elementos solo mediante etiquetas {% if %} en las plantillas HTML."
 
 
 
