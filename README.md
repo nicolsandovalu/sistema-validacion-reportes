@@ -4,19 +4,18 @@
 ![Django](https://img.shields.io/badge/Django-5.0-092E20.svg)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-003B57.svg)
 
-Sistema integral desarrollado para la gestión, validación y consolidación de reportes académicos. Este proyecto automatiza procesos ETL (Extracción, Transformación y Carga) desde archivos CSV, protegiendo la integridad de los datos mediante almacenamiento relacional y control de acceso basado en roles (RBAC).
+Sistema integral desarrollado para la gestión, validación y consolidación de informes académicos. Este proyecto automatiza procesos ETL (Extracción, Transformación y Carga) desde archivos CSV, protegiendo la integridad de los datos mediante almacenamiento relacional y control de acceso basado en roles (RBAC).
 
 Proyecto académico desarrollado para la carrera de Analista Programador (INACAP).
 
 ---
 
 ## ✨ Características Principales
-
 * **Módulo ETL Automatizado:** Ingesta de datos vía CSV con validación de tipos (`try/except`) para prevenir errores de servidor (HTTP 500).
-* **Control de Acceso (RBAC):** Sistema de seguridad con decoradores personalizados operando en el servidor (backend) para los roles `admin`, `normal` y `viewer`.
+* **Control de Acceso (RBAC):** Sistema de seguridad con decoradores personalizados operando en el servidor (backend) para validar los grupos de usuarios.
 * **Dashboard Consolidado:** Interfaz de administración con filtros dinámicos por nombre, programa y estado.
-* **Operaciones CRUD & Borrado Lógico:** Gestión completa del ciclo de vida de los datos. La eliminación de registros utiliza *soft delete* para mantener el historial de auditoría intacto.
-* **Portal Docente (Read-Only):** Vista pública validada mediante cruce de identidad (Nombre + Token único de acceso).
+* **Operaciones CRUD & Borrado Lógico:** Gestión completa del ciclo de vida de los datos. La eliminación de registros utiliza borrado lógico (`soft delete`) para mantener intacto el historial de auditoría.
+* **Portal Docente (Solo lectura):** Vista pública validada mediante cruce de identidad (Nombre + Token único de acceso criptográfico).
 
 ---
 
