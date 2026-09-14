@@ -127,16 +127,16 @@
 
 <body>
     <header>
-        <h1 style="font-size: 1.25rem; margin: 0;">Panel ETL Automatizado</h1>
+        <h1 style="font-size: 1.25rem; margin: 0;">Panel</h1>
         <div class="nav-links">
-            <a href="{% url 'gestion_tokens' %}" class="btn btn-active">Módulo 1: Alta de Accesos</a>
-            <a href="{% url 'gestion_reportes' %}" class="btn btn-inactive">Módulo 2: Carga de Reportes</a>
-            <a href="{% url 'consulta' %}" class="btn btn-public">Vista Pública Docente</a>
+            <a href="{% url 'gestion_tokens' %}" class="btn btn-active">Módulo 1: Alta de accesos</a>
+            <a href="{% url 'gestion_reportes' %}" class="btn btn-inactive">Módulo 2: Carga de reportes</a>
+            <a href="{% url 'consulta' %}" class="btn btn-public">Vista pública docente</a>
 
             <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
                 {% csrf_token %}
                 <button type="submit" class="btn" style="background-color: #dc2626; color: white;">Cerrar
-                    Sesión</button>
+                    sesión</button>
             </form>
         </div>
     </header>
@@ -149,7 +149,7 @@
         {% endif %}
 
         <section class="card">
-            <h2 style="margin-top: 0;">1. Generar Nuevos Tokens</h2>
+            <h2 style="margin-top: 0;">1. Generar nuevos tokens</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem;">Suba un CSV con las columnas exactas
                 <strong>Profesor</strong> y <strong>Correo</strong>.
             </p>
@@ -158,12 +158,12 @@
                 {% csrf_token %}
                 <input type="file" name="archivo_csv" required accept=".csv"
                     style="border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px;">
-                <button type="submit" class="btn btn-active">Cargar y Enviar Correos</button>
+                <button type="submit" class="btn btn-active">Cargar y enviar correos</button>
             </form>
         </section>
 
         <section style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: end;">
-            <h2 style="margin: 0; font-size: 1.1rem;">Base de Datos: Credenciales Activas</h2>
+            <h2 style="margin: 0; font-size: 1.1rem;">Base de datos: Credenciales activas</h2>
             <form method="GET" style="display: flex; gap: 0.5rem;">
                 <input type="text" name="nombre" placeholder="Buscar profesor..." value="{{ nombre_filtro }}"
                     style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px;">
@@ -177,8 +177,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Profesor</th>
-                        <th>Correo Electrónico</th>
-                        <th>Token Generado</th>
+                        <th>Correo electrónico</th>
+                        <th>Token generado</th>
                     </tr>
                 </thead>
                 <tbody>

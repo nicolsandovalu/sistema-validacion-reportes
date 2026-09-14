@@ -25,17 +25,17 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 *(Nota: Las siguientes imágenes demuestran el flujo principal de la aplicación)*
 
 ### 1. Acceso de Administrador
-![Pantalla de Login](docs/login.png)
+![Pantalla de Login](image-2.png)
 
 ### 2. Módulo 1: Generación de Tokens
-![Generación de Tokens](docs/modulo1.png)
+![Generación de tokens](image.png)
 
 ### 3. Módulo 2: Dashboard y Carga de Reportes
-![Dashboard ETL](docs/modulo2.png)
+![Dashboard ETL](image-1.png)
 
 ### 4. Portal Público Docente
-![Portal Docente](docs/portal.png)
-
+![Portal Docente](image-3.png)
+![Reporte](image-4.png)
 ---
 
 ## 🛠️ Tecnologías Utilizadas

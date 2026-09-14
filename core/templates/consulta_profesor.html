@@ -159,9 +159,9 @@
 
 <body>
     <header>
-        <h1 style="font-size: 1.5rem; margin: 0; color: var(--primary);">Portal Docente Institucional</h1>
-        <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Consulta de Historial y Reportes
-            de Evaluación</p>
+        <h1 style="font-size: 1.5rem; margin: 0; color: var(--primary);">Portal docente institucional</h1>
+        <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">Consulta de historial y reportes
+            de evaluación</p>
     </header>
 
     <main>
@@ -173,19 +173,19 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="nombre">Nombre Completo Registrado</label>
+                    <label for="nombre">Nombre completo registrado</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Nicol Sandoval">
                 </div>
                 <div class="form-group">
-                    <label for="token">Token de Acceso Único</label>
+                    <label for="token">Token de acceso único</label>
                     <input type="password" id="token" name="token" required placeholder="Ingrese su código">
                 </div>
-                <button type="submit" class="btn">Acceder al Historial</button>
+                <button type="submit" class="btn">Acceder al historial</button>
             </form>
             <div style="text-align: center; margin-top: 1.5rem;">
                 <a href="{% url 'gestion_reportes' %}"
-                    style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">← Volver al Panel de
-                    Administración</a>
+                    style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">← Volver al panel de
+                    administración</a>
             </div>
         </section>
         {% else %}

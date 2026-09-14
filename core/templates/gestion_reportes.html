@@ -171,16 +171,16 @@
 
 <body>
     <header>
-        <h1 style="font-size: 1.25rem; margin: 0;">Panel ETL Automatizado</h1>
+        <h1 style="font-size: 1.25rem; margin: 0;">Panel</h1>
         <div class="nav-links">
-            <a href="{% url 'gestion_tokens' %}" class="btn btn-inactive">Módulo 1: Alta de Accesos</a>
-            <a href="{% url 'gestion_reportes' %}" class="btn btn-active">Módulo 2: Carga de Reportes</a>
-            <a href="{% url 'consulta' %}" class="btn btn-public">Vista Pública Docente</a>
+            <a href="{% url 'gestion_tokens' %}" class="btn btn-inactive">Módulo 1: Alta de accesos</a>
+            <a href="{% url 'gestion_reportes' %}" class="btn btn-active">Módulo 2: Carga de reportes</a>
+            <a href="{% url 'consulta' %}" class="btn btn-public">Vista pública docente</a>
 
             <form action="{% url 'logout' %}" method="post" style="margin: 0; padding: 0;">
                 {% csrf_token %}
                 <button type="submit" class="btn" style="background-color: #dc2626; color: white;">Cerrar
-                    Sesión</button>
+                    sesión</button>
             </form>
         </div>
     </header>
@@ -193,23 +193,23 @@
         {% endif %}
 
         <section class="card">
-            <h2 style="margin-top: 0;">2. Vincular Reportes (Power BI / Excel)</h2>
+            <h2 style="margin-top: 0;">2. Vincular reportes (Power BI / Excel)</h2>
             <form method="POST" enctype="multipart/form-data"
                 style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
                 {% csrf_token %}
                 <input type="file" name="archivo_csv" required accept=".csv"
                     style="border: 1px solid var(--border); padding: 0.5rem; border-radius: 4px;">
-                <button type="submit" class="btn btn-active">Procesar ETL y Vincular</button>
+                <button type="submit" class="btn btn-active">Procesar y vincular</button>
             </form>
         </section>
 
         <section style="margin-bottom: 1rem;">
-            <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Dashboard: Historial Consolidado</h2>
+            <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Historial consolidado</h2>
             <form class="filter-form" method="GET">
                 <input type="text" name="profesor" placeholder="Buscar Profesor..." value="{{ profesor_filtro }}">
                 <input type="text" name="programa" placeholder="Buscar Programa..." value="{{ programa_filtro }}">
                 <select id="estado" name="estado">
-                    <option value="">Todos los Estados</option>
+                    <option value="">Todos los estados</option>
                     <option value="Activo">Activo</option>
                     <option value="Deprecado">Deprecado</option>
                 </select>
