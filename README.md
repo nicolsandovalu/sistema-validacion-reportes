@@ -50,7 +50,7 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
+   git clone [https://github.com/nicolsandovalu/sistema-validacion-reportes](https://github.com/nicolsandovalu/sistema-validacion-reportes)
    cd tu-repositorio
    ```
 
