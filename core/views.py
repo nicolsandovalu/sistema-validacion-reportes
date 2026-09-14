@@ -175,7 +175,6 @@ def editar_reporte(request, pk):
             return redirect('gestion_reportes')
         except ValueError:
             messages.error(request, "Error: La cantidad ingresada debe ser un número válido.")
-    return render(request, "editar.html", {"registro": registro})
 
 
 def vista_login(request):

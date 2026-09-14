@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Reporte</title>
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --bg-surface: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            padding-top: 3rem;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input,
+        select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-submit {
+            background-color: var(--primary);
+        }
+
+        .btn-cancel {
+            background-color: #6b7280;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>Editar Registro</h2>
+        <p style="color: #6b7280; font-size: 0.9rem;">Docente: <strong>{{ registro.profesor.nombre }}</strong></p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Cantidad de Respuestas</label>
+                <input type="number" name="cantidad" value="{{ registro.cantidad }}" required>
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select name="estado">
+                    <option value="Activo" {% if 'activo' in registro.estado|lower %}selected{% endif %}>Activo</option>
+                    <option value="Deprecado" {% if 'deprecado' in registro.estado|lower %}selected{% endif %}>Deprecado
+                    </option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-submit">Guardar Cambios</button>
+            <a href="{% url 'gestion_reportes' %}" class="btn btn-cancel">Cancelar</a>
+        </form>
+    </div>
+</body>
+
+</html>

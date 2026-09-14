@@ -1,30 +1,35 @@
+# Plan de Desarrollo y Arquitectura del Sistema
 
-# Plan de Desarrollo
+## 1. El Problema
+El problema principal es la pérdida excesiva de tiempo generando reportes operativos para los profesores y enviando individualmente a cada uno sus métricas. Además, la gestión manual mediante archivos locales o correos uno a uno aumenta el riesgo de errores humanos, filtraciones de datos sensibles y accesos no autorizados a información que no corresponde.
 
-## Alcance Actualizado (Evaluación 2)
-El sistema ha migrado de almacenamiento JSON a una base de datos SQLite. Se implementó un CRUD completo protegido mediante roles (decoradores en el servidor) y un sistema de borrado lógico para evitar pérdida de datos.
+## 2. La Solución (Alcance Actualizado - Evaluación 2)
+La solución es automatizar la ingesta y distribución de métricas mediante un sistema back-end seguro. El sistema permite a los administradores subir la información en masa mediante archivos CSV, y generar de forma automática tokens de acceso que se envían por correo a cada profesor. Con este token, los docentes ingresan a una vista pública aislada donde consultan exclusivamente sus propios reportes individuales. 
 
-## MoSCoW
-* **Must:** Base de datos SQLite, vistas CRUD completas, carga masiva vía CSV, login nativo de Django, roles de usuario, generador de tokens y borrado lógico.
-* **Should:** Envío de correos automáticos al crear registros.
-* **Could:** Interfaz pública de consulta por token para profesores.
-* **Won't:** Sistema propio de contraseñas en modelos personalizados (se usa el de Django por seguridad).
+Para soportar esta operativa cumpliendo con los estándares de seguridad de la Evaluación 2, la solución integra:
+* **Persistencia Relacional:** Todo el almacenamiento en JSON ha sido reemplazado por una base de datos **SQLite** gestionada mediante el ORM de Django[cite: 4].
+* **Gestión de Datos:** Implementación de un sistema **CRUD completo** con validación de entradas para administrar los reportes de manera centralizada[cite: 4].
+* **Seguridad y Privacidad:** Control de acceso basado en roles para el panel administrativo, asegurando que no existan filtraciones ni visualización cruzada de datos.
+* **Preservación Histórica:** Implementación de **borrado lógico (soft delete)** para ocultar evaluaciones obsoletas o erróneas sin destruir los registros históricos de la base de datos[cite: 4].
 
+## 3. Priorización MoSCoW
 
-Problema: Actualmente, la recepción y validación de los reportes mensuales de carga académica de los profesores se revisa de forma manual. Esto retrasa la gestión, cuesta horas de trabajo administrativo y pone en riesgo la confidencialidad al enviar resultados por correo uno a uno. 
+### MUST (Debe tener)
+* Autenticación nativa de administradores (**Login** y Logout)[cite: 4].
+* Base de datos relacional **SQLite** configurada de forma segura[cite: 4].
+* Vistas **CRUD** completas con manejo de errores (`try/except`) para evitar caídas del servidor[cite: 4].
+* Control de acceso estricto mediante **roles** (Grupos de Django) validado a nivel de backend[cite: 4].
+* Mecanismo de **borrado lógico** (`soft delete`) para los registros[cite: 4].
+* Generación de tokens únicos y portal de validación seguro para los docentes.
 
-Solución: Un programa que evalúa automáticamente la solicitud de un profesor mediante un token y sus horas. El sistema decide si aprueba o rechaza el acceso al reporte, guarda el registro en un archivo JSON y muestra un resumen web de los intentos de acceso.  
+### SHOULD (Debería tener)
+* Carga masiva de datos estructurados mediante el procesamiento y validación de archivos CSV.
+* Envío automático de correos electrónicos informando el token al profesor registrado.
 
-Alcance:
+### COULD (Podría tener)
+* Filtros dinámicos en el dashboard administrativo (por nombre, estado y programa) para facilitar la auditoría.
+* Alertas visuales (`messages`) en la interfaz para informar sobre el éxito o fracaso de la ingesta de datos.
 
-Entra: Validación lógica de un intento de acceso a la vez, guardado en formato JSON, y una vista web para mostrar el historial de validaciones.  No entra: Bases de datos, sistemas de login con contraseñas, ni carga masiva de archivos.  
-
-Priorización MoSCoW
-
-Must (Imprescindible): Pedir el token y las horas por consola, usar if/elif para decidir entre 4 resultados (acceso concedido, token inválido, sin horas, dato negativo), guardar en datos.json y mostrar una pantalla web con Django.  
-
-Should (Importante): Limpiar los espacios en blanco extra que el usuario pueda tipear por accidente en el token usando funciones nativas de texto.
-
-Could (Deseable): Mostrar un conteo total de accesos aceptados versus rechazados al final de la tabla en la consola.
-
-Won't (Fuera por ahora): Conexión a bases de datos SQL o consumo de APIs para validación con recursos humanos.
+### WON'T (No tendrá por ahora)
+* Sistema de autenticación con modelo de usuario personalizado (Custom User Model), delegando esta responsabilidad al sistema nativo de Django por seguridad[cite: 4].
+* Borrado físico (Hard delete) de los registros en la base de datos.
