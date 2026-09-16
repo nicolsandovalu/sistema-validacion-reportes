@@ -158,7 +158,7 @@ def eliminar_reporte(request, pk):
     registro = get_object_or_404(Registro, pk=pk, eliminado=False)
     if request.method == "POST":
         registro.soft_delete()
-        messages.success(request, "Registro eliminado del sistema (borrado lógico aplicado).")
+        messages.success(request, "Registro eliminado del sistema.")
         return redirect('gestion_reportes')
     return render(request, "confirmar.html", {"registro": registro})
 
@@ -166,15 +166,28 @@ def eliminar_reporte(request, pk):
 def editar_reporte(request, pk):
     # Operación UPDATE: Permite editar un registro existente
     registro = get_object_or_404(Registro, pk=pk, eliminado=False)
+    
     if request.method == "POST":
         try:
-            registro.cantidad = int(request.POST.get("cantidad", registro.cantidad))
+            # Capturamos todos los campos del formulario
+            registro.programa = request.POST.get("programa", registro.programa).strip()
             registro.estado = request.POST.get("estado", registro.estado).strip()
+            registro.resultado = request.POST.get("resultado", registro.resultado or "").strip()
+            
+            # Campos numéricos (atrapamos ValueError si ponen letras)
+            registro.cantidad = int(request.POST.get("cantidad", registro.cantidad))
+            registro.ventas_totales = int(request.POST.get("ventas_totales", registro.ventas_totales))
+            registro.isn = int(request.POST.get("isn", registro.isn))
+            registro.nps = int(request.POST.get("nps", registro.nps))
+            
             registro.save()
-            messages.success(request, "Registro actualizado correctamente.")
+            messages.success(request, "Registro actualizado correctamente con todos sus detalles.")
             return redirect('gestion_reportes')
+            
         except ValueError:
-            messages.error(request, "Error: La cantidad ingresada debe ser un número válido.")
+            messages.error(request, "Error: Verifique que los campos numéricos (cantidad, ventas, ISN, NPS) contengan solo números.")
+            
+    return render(request, "editar.html", {"registro": registro})
 
 
 def vista_login(request):

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Confirmar Eliminación</title>
+    <title>Confirmar eliminación</title>
     <style>
         body {
             font-family: system-ui, sans-serif;
@@ -48,7 +48,7 @@
 <body>
     <div class="card">
         <h2>¿Estás seguro?</h2>
-        <p>Estás a punto de aplicar un borrado lógico al reporte de <strong>{{ registro.profesor.nombre }}</strong>.</p>
+        <p>Estás a punto de eliminar el reporte de <strong>{{ registro.profesor.nombre }}</strong>.</p>
 
         <form method="POST" style="margin-top: 1.5rem;">
             {% csrf_token %}

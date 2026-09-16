@@ -223,6 +223,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Acciones</th>
                         <th>Fecha</th>
                         <th>Profesor</th>
                         <th>Programa</th>
@@ -235,6 +236,12 @@
                 <tbody>
                     {% for rep in reportes %}
                     <tr>
+                        <!-- CORRECCIÓN: Los botones ahora están dentro del <tr> y usan rep.id -->
+                        <td>
+                            <a href="{% url 'editar_reporte' rep.id %}"
+                                style="color: blue; margin-right: 10px;">Editar</a>
+                            <a href="{% url 'eliminar_reporte' rep.id %}" style="color: red;">Eliminar</a>
+                        </td>
                         <td style="color: var(--text-muted);">{{ rep.fecha|date:"d/m/Y H:i" }}</td>
                         <td style="font-weight: bold;">{{ rep.profesor.nombre }}</td>
                         <td>{{ rep.programa }}</td>
@@ -247,7 +254,8 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-muted);">No hay
+                        <!-- CORRECCIÓN: colspan actualizado a 8 -->
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">No hay
                             reportes vinculados.</td>
                     </tr>
                     {% endfor %}
