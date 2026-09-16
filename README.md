@@ -10,34 +10,34 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 
 ---
 
-## ✨ Características Principales
-* **Módulo ETL Automatizado:** Ingesta de datos vía CSV con validación de tipos (`try/except`) para prevenir errores de servidor (HTTP 500).
-* **Control de Acceso (RBAC):** Sistema de seguridad con decoradores personalizados operando en el servidor (backend) para validar los grupos de usuarios.
-* **Dashboard Consolidado:** Interfaz de administración con filtros dinámicos por nombre, programa y estado.
-* **Operaciones CRUD & Borrado Lógico:** Gestión completa del ciclo de vida de los datos. La eliminación de registros utiliza borrado lógico (`soft delete`) para mantener intacto el historial de auditoría.
-* **Portal Docente (Solo lectura):** Vista pública validada mediante cruce de identidad (Nombre + Token único de acceso criptográfico).
+## ✨ Características principales
+* **Módulo ETL automatizado:** Ingesta de datos vía CSV con validación de tipos (`try/except`) para prevenir errores de servidor (HTTP 500).
+* **Control de acceso (RBAC):** Sistema de seguridad con decoradores personalizados operando en el servidor (backend) para validar los grupos de usuarios.
+* **Dashboard consolidado:** Interfaz de administración con filtros dinámicos por nombre, programa y estado.
+* **Operaciones CRUD y borrado lógico:** Gestión completa del ciclo de vida de los datos. La eliminación de registros utiliza borrado lógico (`soft delete`) para mantener intacto el historial de auditoría.
+* **Portal docente (solo lectura):** Vista pública validada mediante cruce de identidad (Nombre + Token único de acceso criptográfico).
 
 ---
 
-## 📸 Vistas del Sistema
+## 📸 Vistas del sistema
 
 *(Nota: Las siguientes imágenes demuestran el flujo principal de la aplicación)*
 
-### 1. Acceso de Administrador
-![Pantalla de Login](image-2.png)
+### 1. Acceso de administrador
+![Acceso de administrador](image-2.png)
 
-### 2. Módulo 1: Generación de Tokens
+### 2. Módulo 1: Generación de tokens
 ![Generación de tokens](image.png)
 
-### 3. Módulo 2: Dashboard y Carga de Reportes
+### 3. Módulo 2: Dashboard y carga de reportes
 ![Dashboard ETL](image-5.png)
 
-### 4. Portal Público Docente
-![Portal Docente](image-3.png)
+### 4. Portal docente
+![Portal docente](image-3.png)
 ![Reporte](image-4.png)
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías utilizadas
 
 * **Backend:** Python, Django 5.0
 * **Base de Datos:** SQLite (ORM de Django)
@@ -46,7 +46,7 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 
 ---
 
-## 🚀 Instalación y Despliegue Local
+## 🚀 Instalación y despliegue local
 
 1. **Clonar el repositorio:**
    ```bash
