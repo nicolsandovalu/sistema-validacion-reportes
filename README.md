@@ -30,7 +30,7 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 ![Generación de tokens](image.png)
 
 ### 3. Módulo 2: Dashboard y Carga de Reportes
-![Dashboard ETL](image-1.png)
+![Dashboard ETL](image-5.png)
 
 ### 4. Portal Público Docente
 ![Portal Docente](image-3.png)
