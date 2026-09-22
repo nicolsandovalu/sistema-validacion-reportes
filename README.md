@@ -71,11 +71,13 @@ pip install -r requirements.txt
 
 * Asigna una clave secreta a la variable SECRET_KEY.
 
-### Configuración inicial de usuarios y roles
-Para probar las vistas protegidas, es necesario crear un superusuario y configurar los roles:
-1. Genera el administrador ejecutando: `python manage.py createsuperuser`
-2. Inicia el servidor y entra a `http://127.0.0.1:8000/admin/`.
-3. Asigna tu usuario de prueba al grupo correspondiente para que los decoradores de rol (`@requiere_rol`) permitan el acceso.
+### Configuración inicial de seguridad (Acceso al sistema)
+Los perfiles de los docentes se generan automáticamente al procesar los CSV, pero para que el personal administrativo pueda ingresar al sistema y utilizar las vistas protegidas (CRUD), se deben configurar los grupos nativos de Django:
+
+1. Genera el administrador del sistema ejecutando: `python manage.py createsuperuser`
+2. Inicia el servidor y entra al panel de administración base: `http://127.0.0.1:8000/admin/`.
+3. Ve a la sección **Groups** (Grupos) y crea manualmente dos grupos con estos nombres exactos: `admin` y `normal`.
+4. Ingresa a tu superusuario y asígnale el grupo `admin`. Esto es estrictamente necesario para que el decorador `@requiere_rol` permita el acceso a las funciones de editar y eliminar reportes.
 
 ## Aplicar migraciones y ejecutar el servidor:
 
