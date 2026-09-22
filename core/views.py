@@ -78,14 +78,25 @@ def gestion_reportes(request):
                 errores.append(nombre_reporte)
                 continue
             
-            # --- ALERTA GRAVE CORREGIDA: Bloque try/except ---
-            # Si el CSV trae letras donde van números, atrapamos el error para que el servidor no colapse.
+            # Validación estricta de estado (Punto 3 de la rúbrica)
+            estado_csv = fila.get('Estado', '').strip()
+            if estado_csv not in ["Activo", "Deprecado"]:
+                errores.append(f"{nombre_reporte} (Estado inválido)")
+                continue
+            
+            # Validación de integridad numérica
             try:
                 cantidad = int(fila.get('Cantidad de Respuestas', 0) or 0)
                 pago = int(fila.get('Pago Profesores', 0) or 0)
                 ventas = int(fila.get('Ventas Totales', 0) or 0)
                 isn_val = int(fila.get('ISN', 0) or 0)
                 nps_val = int(fila.get('NPS', 0) or 0)
+                
+                # Bloquear valores negativos
+                if cantidad < 0 or pago < 0 or ventas < 0:
+                    errores.append(f"{nombre_reporte} (Valores negativos)")
+                    continue
+                    
             except ValueError:
                 messages.error(request, "Error de formato: Se detectaron caracteres inválidos en las columnas numéricas del archivo.")
                 return redirect('gestion_reportes')
@@ -94,7 +105,7 @@ def gestion_reportes(request):
                 profesor=profesor,
                 programa=fila.get('Programa', '').strip(),
                 cantidad=cantidad,
-                estado=fila.get('Estado', '').strip(),
+                estado=estado_csv,
                 pago_profesores=pago,
                 ventas_totales=ventas,
                 cantidad_respuestas=cantidad,
@@ -106,7 +117,7 @@ def gestion_reportes(request):
             
         if errores:
             nombres_unicos = set(errores)
-            messages.warning(request, f"Se cargaron {creados} reportes. OMITIDOS por nombre inexacto: {', '.join(nombres_unicos)}")
+            messages.warning(request, f"Se cargaron {creados} reportes. OMITIDOS por errores de datos o formato: {', '.join(nombres_unicos)}")
         else:
             messages.success(request, f"¡Reportes vinculados correctamente! Se generaron {creados} informes.")
         return redirect('gestion_reportes')
@@ -162,6 +173,7 @@ def eliminar_reporte(request, pk):
         return redirect('gestion_reportes')
     return render(request, "confirmar.html", {"registro": registro})
 
+
 @requiere_rol("admin")
 def editar_reporte(request, pk):
     # Operación UPDATE: Permite editar un registro existente
@@ -169,13 +181,23 @@ def editar_reporte(request, pk):
     
     if request.method == "POST":
         try:
-            # Capturamos todos los campos del formulario
-            registro.programa = request.POST.get("programa", registro.programa).strip()
-            registro.estado = request.POST.get("estado", registro.estado).strip()
-            registro.resultado = request.POST.get("resultado", registro.resultado or "").strip()
+            # 1. Validación de Estado (Punto 3 del profesor)
+            estado_nuevo = request.POST.get("estado", registro.estado).strip()
+            if estado_nuevo not in ["Activo", "Deprecado"]:
+                messages.error(request, "Error: El estado debe ser estrictamente 'Activo' o 'Deprecado'.")
+                return render(request, "editar.html", {"registro": registro})
             
-            # Campos numéricos (atrapamos ValueError si ponen letras)
-            registro.cantidad = int(request.POST.get("cantidad", registro.cantidad))
+            # 2. Validación de Cantidad (evitar negativos)
+            cantidad_nueva = int(request.POST.get("cantidad", registro.cantidad))
+            if cantidad_nueva < 0:
+                messages.error(request, "Error: La cantidad ingresada debe ser un número válido positivo.")
+                return render(request, "editar.html", {"registro": registro})
+            
+            # Asignaciones una vez superada la validación
+            registro.estado = estado_nuevo
+            registro.cantidad = cantidad_nueva
+            registro.programa = request.POST.get("programa", registro.programa).strip()
+            registro.resultado = request.POST.get("resultado", registro.resultado or "").strip()
             registro.ventas_totales = int(request.POST.get("ventas_totales", registro.ventas_totales))
             registro.isn = int(request.POST.get("isn", registro.isn))
             registro.nps = int(request.POST.get("nps", registro.nps))
@@ -186,7 +208,10 @@ def editar_reporte(request, pk):
             
         except ValueError:
             messages.error(request, "Error: Verifique que los campos numéricos (cantidad, ventas, ISN, NPS) contengan solo números.")
+            # Return explícito ante error de valor (Punto 1 del profesor)
+            return render(request, "editar.html", {"registro": registro})
             
+    # Return explícito para peticiones GET (Punto 1 del profesor)
     return render(request, "editar.html", {"registro": registro})
 
 
@@ -202,6 +227,7 @@ def vista_login(request):
             return redirect("gestion_reportes") # Redirige directo a tu dashboard
         messages.error(request, "Usuario o contraseña incorrectos.")
     return render(request, "login.html")
+
 
 def vista_logout(request):
     auth_logout(request)
