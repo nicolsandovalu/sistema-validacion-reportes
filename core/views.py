@@ -165,7 +165,6 @@ def consulta_profesor(request):
 
 @requiere_rol("admin")
 def eliminar_reporte(request, pk):
-    # Operación DELETE: Utiliza soft_delete en lugar de destruir el dato real
     registro = get_object_or_404(Registro, pk=pk, eliminado=False)
     if request.method == "POST":
         registro.soft_delete()
@@ -176,42 +175,59 @@ def eliminar_reporte(request, pk):
 
 @requiere_rol("admin")
 def editar_reporte(request, pk):
-    # Operación UPDATE: Permite editar un registro existente
     registro = get_object_or_404(Registro, pk=pk, eliminado=False)
     
     if request.method == "POST":
+        print("\n=== DEBUG DE SEGURIDAD: INICIO DE POST ===")
+        print(f"Diccionario POST completo recibido: {request.POST}")
+        
         try:
-            # 1. Validación de Estado (Punto 3 del profesor)
+            # 1. Validación de Estado con trazabilidad
             estado_nuevo = request.POST.get("estado", registro.estado).strip()
+            print(f"Estado capturado por el servidor: '{estado_nuevo}'")
+            
             if estado_nuevo not in ["Activo", "Deprecado"]:
+                print(">> ALERTA: Estado inválido detectado. Bloqueando guardado y retornando error.")
                 messages.error(request, "Error: El estado debe ser estrictamente 'Activo' o 'Deprecado'.")
                 return render(request, "editar.html", {"registro": registro})
             
-            # 2. Validación de Cantidad (evitar negativos)
-            cantidad_nueva = int(request.POST.get("cantidad", registro.cantidad))
+            print(">> EXITO: Estado válido. Continuando con el guardado...")
+            
+            # 2. Captura de datos numéricos segura
+            val_cantidad = request.POST.get("cantidad")
+            cantidad_nueva = int(val_cantidad) if val_cantidad != "" else registro.cantidad
+            
             if cantidad_nueva < 0:
-                messages.error(request, "Error: La cantidad ingresada debe ser un número válido positivo.")
+                messages.error(request, "Error: La cantidad ingresada debe ser un número positivo.")
                 return render(request, "editar.html", {"registro": registro})
             
-            # Asignaciones una vez superada la validación
+            # 3. Asignaciones
             registro.estado = estado_nuevo
-            registro.cantidad = cantidad_nueva
             registro.programa = request.POST.get("programa", registro.programa).strip()
             registro.resultado = request.POST.get("resultado", registro.resultado or "").strip()
-            registro.ventas_totales = int(request.POST.get("ventas_totales", registro.ventas_totales))
-            registro.isn = int(request.POST.get("isn", registro.isn))
-            registro.nps = int(request.POST.get("nps", registro.nps))
+            
+            registro.cantidad = cantidad_nueva
+            if hasattr(registro, 'cantidad_respuestas'):
+                registro.cantidad_respuestas = cantidad_nueva
+            
+            val_ventas = request.POST.get("ventas_totales")
+            registro.ventas_totales = int(val_ventas) if val_ventas != "" else registro.ventas_totales
+            
+            val_isn = request.POST.get("isn")
+            registro.isn = int(val_isn) if val_isn != "" else registro.isn
+            
+            val_nps = request.POST.get("nps")
+            registro.nps = int(val_nps) if val_nps != "" else registro.nps
             
             registro.save()
-            messages.success(request, "Registro actualizado correctamente con todos sus detalles.")
+            print("=== DEBUG DE SEGURIDAD: GUARDADO EXITOSO ===\n")
+            messages.success(request, "Registro actualizado correctamente en el sistema.")
             return redirect('gestion_reportes')
             
         except ValueError:
             messages.error(request, "Error: Verifique que los campos numéricos (cantidad, ventas, ISN, NPS) contengan solo números.")
-            # Return explícito ante error de valor (Punto 1 del profesor)
             return render(request, "editar.html", {"registro": registro})
             
-    # Return explícito para peticiones GET (Punto 1 del profesor)
     return render(request, "editar.html", {"registro": registro})
 
 
@@ -224,7 +240,7 @@ def vista_login(request):
         )
         if user:
             auth_login(request, user)
-            return redirect("gestion_reportes") # Redirige directo a tu dashboard
+            return redirect("gestion_reportes")
         messages.error(request, "Usuario o contraseña incorrectos.")
     return render(request, "login.html")
 

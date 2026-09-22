@@ -71,12 +71,11 @@ pip install -r requirements.txt
 
 * Asigna una clave secreta a la variable SECRET_KEY.
 
-### Configuración Inicial de Usuarios y Roles
+### Configuración inicial de usuarios y roles
 Para probar las vistas protegidas, es necesario crear un superusuario y configurar los roles:
 1. Genera el administrador ejecutando: `python manage.py createsuperuser`
 2. Inicia el servidor y entra a `http://127.0.0.1:8000/admin/`.
-3. Ve a la sección de **Groups** (Grupos) y crea exactamente dos grupos con estos nombres: `admin` y `normal`.
-4. Asigna tu usuario de prueba al grupo correspondiente para que los decoradores de rol (`@requiere_rol`) permitan el acceso.
+3. Asigna tu usuario de prueba al grupo correspondiente para que los decoradores de rol (`@requiere_rol`) permitan el acceso.
 
 ## Aplicar migraciones y ejecutar el servidor:
 

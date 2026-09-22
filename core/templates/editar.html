@@ -129,6 +129,25 @@
             background-color: #f3f4f6;
         }
 
+        .message {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border-left: 4px solid #ef4444;
+        }
+
+        .message-success {
+            background-color: #d1fae5;
+            color: #047857;
+            border-left: 4px solid #10b981;
+        }
+
         /* Mejora Mobile: Se adapta a pantallas de celular */
         @media (max-width: 550px) {
             .form-row {
@@ -145,13 +164,27 @@
 
 <body>
     <main class="card">
-        <div class="header-section">
-            <h2>Editar Reporte</h2>
-            <p style="color: var(--text-muted); margin: 0;">Docente: <strong style="color: var(--primary);">{{
-                    registro.profesor.nombre }}</strong></p>
+        <div class="header-section"
+            style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 2rem;">
+            <h2 style="margin-top: 0; margin-bottom: 0.5rem; color: #111827; font-size: 1.8rem;">Editar Reporte</h2>
+            <p style="color: #6b7280; margin: 0; font-size: 1.1rem;">
+                Docente: <strong style="color: #8b5cf6;">{{ registro.profesor.nombre }}</strong>
+            </p>
         </div>
 
+        {% if messages %}
+        <div style="margin-bottom: 1.5rem;">
+            {% for message in messages %}
+            <div
+                class="message {% if message.tags == 'error' %}message-error{% elif message.tags == 'success' %}message-success{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <form method="POST">
+
             {% csrf_token %}
 
             <div class="form-group">
@@ -172,7 +205,7 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="cantidad">Respuestas / Horas</label>
+                    <label for="cantidad">Cantidad de respuestas</label>
                     <input type="number" id="cantidad" name="cantidad" value="{{ registro.cantidad }}" required min="0">
                 </div>
                 <div class="form-group">
