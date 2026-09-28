@@ -44,7 +44,32 @@ Proyecto académico desarrollado para la carrera de Analista Programador (INACAP
 * **Frontend:** HTML5 Semántico, CSS3 (Variables, Flexbox), Responsive Design
 * **Seguridad:** Tokens CSRF, variables de entorno (`python-decouple`), autenticación nativa de Django.
 
+
 ---
+
+## 🔌 Documentación de la API RESTful (EVA3)
+
+El sistema expone una API REST protegida para la consulta y creación de registros de reportes. 
+
+### Justificación de Configuración DRF
+Se implementó `TokenAuthentication` en lugar de sesiones tradicionales (cookies) porque la API está diseñada para ser consumida por clientes sin navegador (como scripts u otros servidores). La seguridad global exige autenticación obligatoria (`IsAuthenticated`), y se habilitó la paginación global con un `PAGE_SIZE` de 10 para evitar la saturación de memoria del servidor al consultar grandes volúmenes de datos.
+
+### Tabla de Endpoints
+Todas las peticiones a `/api/registros/` requieren el envío de un token válido en la cabecera HTTP (`Authorization: Token <tu_token>`).
+
+| Método | Endpoint | Acción | Permiso Requerido |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/token/` | Genera par de tokens JWT (Access/Refresh). | Público |
+| **POST** | `/api/token/refresh/` | Renueva un Access Token expirado. | Público |
+| **GET** | `/api/registros/` | Lista todos los registros paginados (10 por página). | Usuario Autenticado (Token) |
+| **POST** | `/api/registros/` | Crea un nuevo registro. El `estado` se asigna automáticamente. | Usuario Autenticado (Token) |
+| **GET** | `/api/registros/<id>/` | Muestra el detalle de un registro específico. | Usuario Autenticado (Token) |
+| **PUT/PATCH** | `/api/registros/<id>/` | Modifica un registro existente. | Usuario Autenticado (Token) |
+| **DELETE** | `/api/registros/<id>/` | Elimina un registro de la base de datos. | **Solo Administradores (Staff)** |
+
+
+---
+
 
 ## 🚀 Instalación y despliegue local
 
