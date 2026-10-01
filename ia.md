@@ -1,12 +1,15 @@
-# Registro de Uso de Inteligencia Artificial (Evaluación 2)
+# Registro de Uso de Inteligencia Artificial (Evaluación 3 - API REST)
 
 * **Herramienta utilizada:** Gemini.
-* **Pregunta textual realizada:** "Necesito implementar un sistema de roles (admin, normal, viewer) para mi aplicación en Django. ¿Cómo configuro los permisos y protejo mis vistas para que solo los usuarios autorizados puedan editar o eliminar registros?"
+* **Pregunta textual realizada:** "Estoy creando una API con Django REST Framework para mi evaluación. ¿Cómo configuro los permisos para poder probar mis rutas GET y POST rápidamente en Thunder Client sin que me dé error 401?"
 
-* **Corrección y justificación adoptada:** 
-  La Inteligencia Artificial me entregó una respuesta que contenía dos malas prácticas técnicas, las cuales analicé, rechacé y corregí basándome en los requerimientos formales del proyecto:
+* **Qué me respondió la IA:** 
+  La IA me sugirió modificar mi archivo `settings.py` y configurar la clase de permisos globales con `rest_framework.permissions.AllowAny`. Me indicó que esto apagaría temporalmente la seguridad para permitirme hacer pruebas rápidas sin necesidad de enviar credenciales.
+
+* **Por qué estaba mal y qué hice yo (Corrección crítica):** 
+  Descarté esta opción. Configurar `AllowAny` apaga por completo la seguridad y deja la API pública y vulnerable en internet, lo cual es una mala práctica grave sancionada directamente en los requerimientos del proyecto (Criterio 3.1.2). 
   
-  1. **Rechazo de modelo personalizado:** La IA sugirió crear un modelo de usuario propio (`Custom User Model`) para manejar los roles e incluso propuso esquemas para manejar contraseñas. Descarté esta opción por razones de seguridad y arquitectura. En su lugar, utilicé el sistema nativo de `Groups` de Django, el cual es el estándar seguro para resolver la autorización sin reinventar la rueda ni exponer credenciales.
-
-  2. **Corrección de vulnerabilidad en vistas:** La IA propuso restringir los permisos de usuario ocultando los botones de "Editar" y "Eliminar" directamente en las plantillas HTML usando etiquetas `{% if %}`. Corregí este error, ya que la validación en el frontend permite que cualquier usuario ejecute una acción escribiendo la ruta URL manualmente. La solución definitiva que implementé fue construir un decorador propio (`@requiere_rol`) que intercepta la petición en el servidor y consulta la base de datos antes de permitir la ejecución de la vista.
-
+  En su lugar, implementé el estándar seguro:
+  1. Configuré `rest_framework.permissions.IsAuthenticated` por defecto en `settings.py` para bloquear todo el tráfico anónimo.
+  2. Implementé `TokenAuthentication` para usar llaves criptográficas truncadas en la cabecera HTTP (`Authorization: Token ...`).
+  3. Para los roles, creé la clase de permisos diferenciados `SoloStaffBorra`, garantizando que cualquier usuario autenticado pueda leer y crear, pero que solo los administradores (staff) tengan el privilegio de ejecutar operaciones `DELETE`.
